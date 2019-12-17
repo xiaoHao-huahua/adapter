@@ -1,4 +1,4 @@
-# adapter2
+# adapter1
 
 ## Project setup
 ```

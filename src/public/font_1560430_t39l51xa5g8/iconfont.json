@@ -1,0 +1,37 @@
+{
+  "id": "1560430",
+  "name": "atguigu",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "3553",
+      "name": "客服优先",
+      "font_class": "kefuyouxian",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "5130",
+      "name": "珠宝饰品",
+      "font_class": "zhubaoshipin",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "12025563",
+      "name": "search",
+      "font_class": "search",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "12029545",
+      "name": "wiki",
+      "font_class": "wiki",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    }
+  ]
+}

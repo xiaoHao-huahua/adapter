@@ -1,28 +1,33 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="wrapper">
+    <router-view></router-view>
+    <FooterGuide v-show="$route.meta.isShow"></FooterGuide>
   </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import { Button } from 'mint-ui';
 
+import FooterGuide from './component/FooterGuide/FooterGuide.vue'
+import Header from './component/Header/Header'
+import Shop from './pages/Shop/shop'
+
+
+Vue.component('Header',Header)
+Vue.component('Shop',Shop)
+
+Vue.component(Button.name, Button);
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+  components:{
+    FooterGuide
+  },
+  async mounted() {
+    this.$store.dispatch('getAddress')
+    this.$store.dispatch('autoLogin')
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="stylus" rel="stylesheet/stylus" scoped>
 </style>
