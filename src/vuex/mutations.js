@@ -5,8 +5,10 @@ import {
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
   RECEIVE_USER,
-  RECEIVE_TOKEN
-
+  RECEIVE_TOKEN,
+  RECEIVE_GOODS,
+  RECEIVE_RATINGS,
+  RECEIVE_INFO
   } from './mutation-types.js'
 
 export default {
@@ -25,5 +27,14 @@ export default {
   },
   [RECEIVE_TOKEN](state,{token}){
     state.token = token
+  },
+  [RECEIVE_INFO](state,{info}){
+    state.info = info
+  },
+  [RECEIVE_RATINGS](state,{ratings}){
+    state.ratings = ratings
+  },
+  [RECEIVE_GOODS](state,{goods}){
+    state.goods = goods
   }
 }

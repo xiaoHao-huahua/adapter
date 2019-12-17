@@ -8,6 +8,8 @@ export default {
   categorys:[],
   shops:[],
   user:{},
-  // token:localStorage.getItem('token_key' || '')
-  token:localStorage.getItem('token_key' || '')//当前用户登录标记
+  token:localStorage.getItem('token_key' || ''),//当前用户登录标记
+  goods:[],
+  ratings:[],
+  info:{}
 }

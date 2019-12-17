@@ -7,6 +7,7 @@ import store from './vuex/store.js'
 import './validate.js'
 import Star from './component/Star/Star.vue'
 import *as API from './api'
+import './moke/moke-server.js'
 
 
 

@@ -24,3 +24,13 @@ export const reqSmsLogin = ({phone,code}) => ajax.post('/login_sms',{phone,code}
 
 // 7. 自动登陆
 export const reqAutoLogin = () => ajax.get('/auto_login')
+
+
+// 8.获取goods
+export const reqGoods = () => ajax('/goods')
+
+// 9.获取ratings
+export const reqRatings = () => ajax('/ratings')
+
+// 10.获取info
+export const reqInfo = () => ajax('/info')

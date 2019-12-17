@@ -5,14 +5,20 @@ import {
   reqAddress,
   reqCategorys,
   reqShops,
-  reqAutoLogin
+  reqAutoLogin,
+  reqGoods,
+  reqRatings,
+  reqInfo
 } from "../api/index.js";
 import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
   RECEIVE_USER,
-  RECEIVE_TOKEN
+  RECEIVE_TOKEN,
+  RECEIVE_GOODS,
+  RECEIVE_RATINGS,
+  RECEIVE_INFO,
 } from "../vuex/mutation-types.js";
 
 export default {
@@ -68,5 +74,34 @@ export default {
     localStorage.removeItem("token_key");
     commit(RECEIVE_USER, "");
     commit(RECEIVE_TOKEN, "");
+  },
+
+  //异步获取商家信息
+  async getShopInfo({commit}){
+    const result = await reqInfo()
+    if(result.code===0){
+      const info = result.data
+      commit(RECEIVE_INFO,{info})
+      typeof cb==='function' && cb()
+    }
+  },
+
+  //异步获取商家评价
+  async getShopRatings({commit}){
+    const result = await reqRatings()
+    if(result.code === 0){
+      const ratings = result.data
+      commit(RECEIVE_RATINGS,{ratings})
+      typeof cb==='function' && cb()
+    }
+  },
+
+  //异步获取商家商品列表
+  async getShopGoods({commit}){
+    const result = await reqGoods() 
+    if(result.code === 0){
+      const goods = result.data
+      commit(RECEIVE_GOODS,{goods})
+    }
   }
 };
