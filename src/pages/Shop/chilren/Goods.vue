@@ -1,17 +1,17 @@
 <template>
 <div> 
   <div class="goods">
-    <div class="menu-wrapper">
-      <ul>
-        <li class="menu-item current" v-for="(good,index) in goods" :key='index'>
+    <div class="menu-wrapper" ref='left'>
+      <ul >
+        <li class="menu-item" v-for="(good,index) in goods" :key='index' :class="{current: index===currentIndex}">
           <span class="text bottom-border-1px">
             <img class="icon" :src="good.icon" v-if="good.icon"/>
             {{good.name}}</span>
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper">
-      <ul>
+    <div class="foods-wrapper" ref='right'>
+      <ul ref='rightUI'>
         <li class="food-list-hook" v-for="(good,index) in goods" :key='good.name'>
           <h1 class="title">{{good.name}}</h1>
           <ul>
@@ -46,11 +46,66 @@
 </template>
 
 <script type="text/ecmascript-6"> 
+import BSccroll from 'better-scroll'
 import {mapState} from 'vuex'
 export default {
+  data(){
+    return {
+      scrollY:'',// 1). 右侧列表滑动的Y轴坐标: scrollY  在滑动过程中不断改变
+      tops:[] // 2). 右侧每个分类<li>的top值的数组tops: 第一次列表显示后统计后面不再变化
+    }
+  },
   computed:{
-    ...mapState(['goods'])
+    ...mapState(['goods']),
+    currentIndex(){
+      const  {scrollY,tops} = this
+      return tops.findIndex((top,index)=>{scrollY >= top && scrollY < tops[index+1] })
+    }
+
+  },
+  methods:{
+    _initScrollY(){
+      const leftScroll = new BSccroll(this.$refs.left,{})
+      const rightScroll = new BSccroll(this.$refs.right,{
+        probeType:1 // 非实时 / 触摸
+      })
+
+      //右侧列表绑定Scroll监听
+      rightScroll.on('scroll',({x,y})=>{
+        console.log(x,y);
+        this.scrollY = Math.abs(y)
+      })
+
+      //右侧列表绑定scrollEnd监听
+      rightScroll.on('scrollEnd',({x,y})=>{
+        console.log(x,y);
+        this.scrollY = Math.abs(y)
+      })
+
+    },
+
+    //右侧所有分li的top的数组
+    _initTops(){
+      const tops = []
+      let top = 0
+      tops.push(top)
+      const lis = Array.prototype.slice.call(this.$refs.rightUI.children)
+      lis.forEach(li => {
+        top += li.clientHeight
+        tops.push(top)
+      });
+      this.tops = tops
+    }
+  },
+  watch:{
+    goods(){
+      this.$nextTick(()=>{
+        this._initScrollY()
+        this. _initTops()
+      })
+    }
   }
+  
 };
 </script>
 
