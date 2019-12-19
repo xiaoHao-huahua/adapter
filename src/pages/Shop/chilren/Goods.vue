@@ -3,7 +3,8 @@
   <div class="goods">
     <div class="menu-wrapper" ref='left'>
       <ul >
-        <li class="menu-item" v-for="(good,index) in goods" :key='index' :class="{current: index===currentIndex}">
+        <li class="menu-item" v-for="(good,index) in goods" :key='index' 
+            :class="{current:index===currentIndex}" @click="clickItem(index)">
           <span class="text bottom-border-1px">
             <img class="icon" :src="good.icon" v-if="good.icon"/>
             {{good.name}}</span>
@@ -15,7 +16,7 @@
         <li class="food-list-hook" v-for="(good,index) in goods" :key='good.name'>
           <h1 class="title">{{good.name}}</h1>
           <ul>
-            <li class="food-item bottom-border-1px" v-for="(food,index) in good.foods">
+            <li class="food-item bottom-border-1px" v-for="(food,index) in good.foods" @click="showFood(food)">
               <div class="icon">
                 <img
                   width="57"
@@ -34,51 +35,63 @@
                   <span class="now">￥{{food.price}}</span>
                   <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
-                <div class="cartcontrol-wrapper">CartControl组件</div>
+                <div class="cartcontrol-wrapper">
+                  <CartControl :food='food'/>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <ShopCart/>
   </div>
+  <Food :food="food" ref="food"/>
 </div>
 </template>
 
 <script type="text/ecmascript-6"> 
-import BSccroll from 'better-scroll'
+import BScroll from 'better-scroll'
 import {mapState} from 'vuex'
+
+import Food from '../../../component/Food/Food'
+import ShopCart from '../../../component/ShopCart/ShopCart'
+
 export default {
   data(){
     return {
       scrollY:'',// 1). 右侧列表滑动的Y轴坐标: scrollY  在滑动过程中不断改变
-      tops:[] // 2). 右侧每个分类<li>的top值的数组tops: 第一次列表显示后统计后面不再变化
+      tops:[], // 2). 右侧每个分类<li>的top值的数组tops: 第一次列表显示后统计后面不再变化
+      food:{} //需要显示的food列表
     }
   },
   computed:{
-    ...mapState(['goods']),
+    ...mapState({
+      goods:state=>state.shop.goods
+    }),
     currentIndex(){
-      const  {scrollY,tops} = this
-      return tops.findIndex((top,index)=>{scrollY >= top && scrollY < tops[index+1] })
+      const {scrollY,tops} = this
+      return tops.findIndex((top,index)=>scrollY >= top && scrollY < tops[index+1])
     }
 
   },
   methods:{
     _initScrollY(){
-      const leftScroll = new BSccroll(this.$refs.left,{})
-      const rightScroll = new BSccroll(this.$refs.right,{
+      this.leftScroll = new BScroll(this.$refs.left,{
+        click: true,
+      })
+      this.rightScroll = new BScroll(this.$refs.right,{
+        click: true,
         probeType:1 // 非实时 / 触摸
       })
 
       //右侧列表绑定Scroll监听
-      rightScroll.on('scroll',({x,y})=>{
-        console.log(x,y);
+      this.rightScroll.on('scroll',({x,y})=>{
         this.scrollY = Math.abs(y)
       })
 
       //右侧列表绑定scrollEnd监听
-      rightScroll.on('scrollEnd',({x,y})=>{
-        console.log(x,y);
+      this.rightScroll.on('scrollEnd',({x,y})=>{
         this.scrollY = Math.abs(y)
       })
 
@@ -95,7 +108,22 @@ export default {
         tops.push(top)
       });
       this.tops = tops
+    },
+    clickItem(index){
+      //得到对应的top
+      const top = this.tops[index]
+      //立即更新scrollY为目标值(立即选中当前分类项)
+      this.scrollY = top
+      //让右侧列表滑动到对应的位置
+      this.rightScroll.scrollTo(0,-top,300)
+    },
+    showFood(food){
+      //保存到状态
+      this.food = food
+      //显示food组件
+      this.$refs.food.toggleShow()
     }
+
   },
   watch:{
     goods(){
@@ -104,6 +132,10 @@ export default {
         this. _initTops()
       })
     }
+  },
+  components:{
+    Food,
+    ShopCart
   }
   
 };
