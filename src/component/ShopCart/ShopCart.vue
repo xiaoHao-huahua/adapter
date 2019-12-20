@@ -30,9 +30,7 @@
                 <span class="name">{{food.name}}</span>
                 <div class="price"><span>￥{{food.price}}</span></div>
                 <div class="cartcontrol-wrapper">
-                  <div class="cartcontrol">
-                    <CartControl :food="food"/>
-                  </div>
+                  <CartControl :food="food"/>
                 </div>
               </li>
             </ul>
@@ -81,10 +79,14 @@ import {CLEAR_CART_FOODS} from '../../vuex/mutation-types'
       },
       listShow(){
         if(this.totalCount === 0){
+          console.log(this.totalCount);
+          console.log('1111',this.isShow);
           this.isShow = false
+          console.log('2222',this.isShow);
           return false
         }
         if(this.isShow){
+          console.log("isShow",this.isShow);
           this.$nextTick(()=>{
             if(!this.cartList){
               this.cartList = new BScroll(this.$refs.cartList,{
@@ -102,7 +104,9 @@ import {CLEAR_CART_FOODS} from '../../vuex/mutation-types'
     },
     methods:{
       toggleShow(){
+        if(this.totalCount>0){
         this.isShow = !this.isShow
+        }
       },
       clearCartFoods(){
         MessageBox.confirm('确定清除吗').then(

@@ -80,6 +80,7 @@ export default {
       this.leftScroll = new BScroll(this.$refs.left,{
         click: true,
       })
+      
       this.rightScroll = new BScroll(this.$refs.right,{
         click: true,
         probeType:1 // 非实时 / 触摸
@@ -87,11 +88,13 @@ export default {
 
       //右侧列表绑定Scroll监听
       this.rightScroll.on('scroll',({x,y})=>{
+        console.log('scroll',x,y);
         this.scrollY = Math.abs(y)
       })
 
       //右侧列表绑定scrollEnd监听
       this.rightScroll.on('scrollEnd',({x,y})=>{
+        console.log('scrollEnd',x,y);
         this.scrollY = Math.abs(y)
       })
 
