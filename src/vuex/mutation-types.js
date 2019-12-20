@@ -11,3 +11,4 @@ export const RECEIVE_INFO = 'receive_info'
 export const ADD_FOOD_COUNT  = 'add_food_count'
 export const REDUCE_FOOD_COUNT = 'reduce_food_count'
 export const CLEAR_CART_FOODS = 'clear_cart_foods'
+export const RECEIVE_SHOP = "receive_shop"

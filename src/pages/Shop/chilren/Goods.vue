@@ -67,36 +67,48 @@ export default {
   },
   computed:{
     ...mapState({
-      goods:state=>state.shop.goods
+      goods:state=>state.shop.shop.goods || []
     }),
     currentIndex(){
       const {scrollY,tops} = this
-      return tops.findIndex((top,index)=>scrollY >= top && scrollY < tops[index+1])
+      const index =  tops.findIndex((top,index)=>scrollY >= top && scrollY < tops[index+1])
+      if(index !== this.index && this.leftScroll){
+        this.index = index
+        const li = this.$refs.rightUI.children[index]
+        this.leftScroll.scrollToElement(li,300)
+      }
+      return index
     }
 
   },
   methods:{
     _initScrollY(){
-      this.leftScroll = new BScroll(this.$refs.left,{
-        click: true,
-      })
+      if(!this.leftScroll){
+        this.leftScroll = new BScroll(this.$refs.left,{
+          click: true,
+        })
+        
+        this.rightScroll = new BScroll(this.$refs.right,{
+          click: true,
+          probeType:1 // 非实时 / 触摸
+        })
+
+        //右侧列表绑定Scroll监听
+        this.rightScroll.on('scroll',({x,y})=>{
+          console.log('scroll',x,y);
+          this.scrollY = Math.abs(y)
+        })
+
+        // 右侧列表绑定scrollEnd监听
+        this.rightScroll.on('scrollEnd',({x,y})=>{
+          console.log('scrollEnd',x,y);
+          this.scrollY = Math.abs(y)
+        })
+      }else{
+        this.rightScroll.refresh()
+        this.leftScroll.refresh()
+      }
       
-      this.rightScroll = new BScroll(this.$refs.right,{
-        click: true,
-        probeType:1 // 非实时 / 触摸
-      })
-
-      //右侧列表绑定Scroll监听
-      this.rightScroll.on('scroll',({x,y})=>{
-        console.log('scroll',x,y);
-        this.scrollY = Math.abs(y)
-      })
-
-      //右侧列表绑定scrollEnd监听
-      this.rightScroll.on('scrollEnd',({x,y})=>{
-        console.log('scrollEnd',x,y);
-        this.scrollY = Math.abs(y)
-      })
 
     },
 
@@ -127,6 +139,12 @@ export default {
       this.$refs.food.toggleShow()
     }
 
+  },
+  mounted() {
+    if(this.goods.length > 0){
+      this._initScrollY()
+      this. _initTops()
+    }
   },
   watch:{
     goods(){

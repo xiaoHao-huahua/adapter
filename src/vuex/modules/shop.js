@@ -1,21 +1,23 @@
 import Vue from "vue";
 
-import { reqGoods, reqRatings, reqInfo } from "../../api/index.js";
+import { reqGoods, reqRatings, reqInfo ,reqShop } from "../../api/index.js";
 import {
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
   RECEIVE_INFO,
   ADD_FOOD_COUNT,
   REDUCE_FOOD_COUNT,
-  CLEAR_CART_FOODS
+  CLEAR_CART_FOODS,
+  RECEIVE_SHOP
 } from "../mutation-types.js";
 
 export default {
   state: {
-    goods: [],
-    ratings: [],
-    info: {},
-    cartFoods:[]
+    // goods: [],
+    // ratings: [],
+    // info: {},
+    cartFoods:[],
+    shop:{}
   },
   mutations: {
     [RECEIVE_INFO](state, { info }) {
@@ -26,6 +28,10 @@ export default {
     },
     [RECEIVE_GOODS](state, { goods }) {
       state.goods = goods;
+    },
+    //保存商家信息
+    [RECEIVE_SHOP](state,shop){
+      state.shop = shop
     },
     [ADD_FOOD_COUNT](state, { food }) {
       if (food.count) {
@@ -49,32 +55,47 @@ export default {
     }
   },
   actions: {
-    //异步获取商家信息
-    async getShopInfo({ commit }) {
-      const result = await reqInfo();
-      if (result.code === 0) {
-        const info = result.data;
-        commit(RECEIVE_INFO, { info });
-        typeof cb === "function" && cb();
-      }
-    },
+    /*
+      //异步获取商家信息
+      async getShopInfo({ commit }) {
+        const result = await reqInfo();
+        if (result.code === 0) {
+          const info = result.data;
+          commit(RECEIVE_INFO, { info });
+          typeof cb === "function" && cb();
+        }
+      },
 
-    //异步获取商家评价
-    async getShopRatings({ commit }) {
-      const result = await reqRatings();
-      if (result.code === 0) {
-        const ratings = result.data;
-        commit(RECEIVE_RATINGS, { ratings });
-        typeof cb === "function" && cb();
-      }
-    },
+      //异步获取商家评价
+      async getShopRatings({ commit }) {
+        const result = await reqRatings();
+        if (result.code === 0) {
+          const ratings = result.data;
+          commit(RECEIVE_RATINGS, { ratings });
+          typeof cb === "function" && cb();
+        }
+      },
 
-    //异步获取商家商品列表
-    async getShopGoods({ commit }) {
-      const result = await reqGoods();
-      if (result.code === 0) {
-        const goods = result.data;
-        commit(RECEIVE_GOODS, { goods });
+      //异步获取商家商品列表
+      async getShopGoods({ commit }) {
+        const result = await reqGoods();
+        if (result.code === 0) {
+          const goods = result.data;
+          commit(RECEIVE_GOODS, { goods });
+        }
+      },
+    */
+    async getShop({commit,state},id){
+      if(id === state.shop.id){
+        return 
+      }
+      if(state.shop.id){
+        commit(RECEIVE_SHOP,{})
+      }
+      const result = await reqShop(id)
+      if(result.code === 0){
+        const shop = result.data
+        commit(RECEIVE_SHOP,shop)
       }
     },
 
